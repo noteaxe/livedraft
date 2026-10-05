@@ -4,7 +4,7 @@ __An Ao3 HTML editor designed to make it easy to build, preview and edit fics us
 
 ## Main Features 
 
-+ __Preview and edit Ao3 fics styled using *any* custom css worksin.__
++ __Preview and edit Ao3 fics styled using *any* custom css workskin.__
 + __Easily integrate styled HTML elements with normal text.__
 + __Quickly rearrange styled sections.__
 + __Save your work in the browser and locally.__
