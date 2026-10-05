@@ -1,0 +1,346 @@
+#popupContent, #highlighting, #highlighting * {
+    font-size: 10pt;
+    font-family: monospace;
+    line-height: 1em;
+    overflow-wrap: anywhere;
+}
+
+.htmlviewcont{
+    position: absolute;
+    width: 100%;
+    height: 20em;
+    background: transparent;
+}
+
+#popupContent {
+    z-index: 1;
+    width: 100%;
+    height: 100%;
+    position: absolute;
+    padding: 0;
+    opacity: 0.2;
+    caret-color: black;
+}
+
+#popupContent::-webkit-scrollbar{
+    display: none;
+}
+
+#highlighting-content::-webkit-scrollbar{
+    display: none;
+}
+
+#highlighting::-webkit-scrollbar{
+    display: none;
+}
+
+#highlighting {
+    z-index: 0;
+    position: relative;
+    margin: 0;
+    overflow-y: scroll;
+    height: 100%;
+    padding: 1px;
+    word-wrap: anywhere;
+    white-space: pre-wrap;
+}
+
+#highlighting-content {
+    overflow: hidden;
+    padding: 0;
+    margin-top: -0.8rem;
+    padding-bottom: 0.8rem;
+}
+
+#highlighting-content span {
+    overflow-wrap: anywhere;
+    white-space: normal;
+}
+
+#htmlPopup{
+    display: none;
+    position: sticky;
+    z-index: 3;
+    margin-inline: auto;
+    top: 6em;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 20px;
+    width: 80%;
+    margin-top: 1em;
+    flex-direction: column;
+}
+
+*::-webkit-scrollbar {
+    background-color: transparent;
+    width: 15px;
+    }
+    *::-webkit-scrollbar-track {
+    background-color: transparent;
+    }
+    *::-webkit-scrollbar-thumb {
+    border-radius: 20px;
+    border: 4px solid transparent;
+    background-color: rgba(156, 156, 156, 0.2);
+    background-clip: content-box;
+}
+
+
+.textoption{
+    position: sticky;
+    top: 0px;
+    display: flex;
+    gap: 10px;
+    justify-content: center;
+    flex-wrap: wrap;
+    max-width: 85%;
+    margin: auto;
+}
+.highlighter{
+    position: relative;
+}
+
+.highlighter::before{
+    content: '';
+    position: absolute;
+    width: -webkit-fill-available;
+    height: -webkit-fill-available;
+    max-height: 110%;
+    /*outline: dotted rgb(113 37 33) !important;*/
+    outline: dotted #f63636 !important;
+    outline-offset: 4px;
+    margin: -0.1em;
+    border-radius: 2px;
+    
+}
+
+.elmContainer{
+    cursor: pointer;
+    border: solid transparent;
+}
+
+.hideSelection::selection{
+    background: none;
+}
+
+.richtext {
+    font: 100%/1.125 'Lucida Grande', 'Lucida Sans Unicode', Verdana, Helvetica, sans-serif, 'GNU Unifont' !important;
+    line-height: 1.5 !important;
+}
+.textoption::before{
+    content: "";
+    width: 100%;
+    height: 1%;
+    top: 100%;
+    padding-bottom: 0.5em;
+    border-bottom: solid lightgrey 2px;
+    position: absolute;
+    z-index: 1;
+}
+#editTools{
+    position: sticky; 
+    z-index: 3; 
+    top: 0;
+    outline: solid 1em white;
+    background: white;
+}
+
+.darkModeEditTools{
+    outline: solid 1em rgb(20, 20, 21) !important;
+    background: rgb(20, 20, 21) !important;
+    color: white !important;
+}
+#editorcontainer{
+    display: block
+}
+
+
+    /* Ao3 Style*/
+body {
+    font: 100%/1.125 'Lucida Grande', 'Lucida Sans Unicode', Verdana, Helvetica, sans-serif, 'GNU Unifont';
+    margin: 0;
+    padding: 0;
+    background-color: white;
+}
+
+details summary {
+    cursor: pointer;
+}
+details summary > * {
+    display: inline;
+}
+
+
+#workskin {
+    font-size: 1.08em;
+    margin: auto;
+    padding: 1em 0.25em;
+    max-width: 72em;
+    overflow-x: clip;
+    position: relative;
+    width: 95%;
+}
+
+#workskin .module {
+    float: none;
+}
+
+/* AO3 userstuff */
+.userstuff {
+    word-wrap: break-word;
+    line-height: 1.5;
+    position: relative;
+    padding: 0.5em;
+    border-radius: 2px;
+}
+
+.userstuff p, .userstuff details {
+    margin: 1.286em auto;
+    padding: 0;
+}
+
+.userstuff dl {
+    margin: 1.5em 0;
+    border: 0;
+}
+
+.userstuff dl dl {
+    width: 90%;
+    margin: auto;
+}
+
+.userstuff dt {
+    display: block;
+    font-weight: bold;
+}
+
+.userstuff dd {
+    display: block;
+    margin-block-start: 1.25em;
+    margin-block-end: 1.25em;
+    margin-inline-start: 3em;
+}
+
+.userstuff dd p {
+    margin: 0;
+    padding: 0;
+}
+
+.userstuff ul {
+    margin: 1.125em auto;
+    padding: 0 1em;
+}
+
+.userstuff ul li {
+    display: list-item;
+}
+
+.userstuff li, .userstuff ol ul li {
+    font-weight: normal;
+    display: list-item;
+    list-style-type: disc;
+    margin-block-start: 0.75em;
+    margin-inline-end: 0;
+    margin-block-end: 0.75em;
+    margin-inline-start: 1.75em;
+}
+
+.userstuff ol {
+    margin: 0.75em auto;
+    padding: 0 1.5em;
+}
+
+.userstuff ol li {
+    list-style-type: decimal;
+    margin-block-start: 0.75em;
+    margin-inline-end: 0;
+    margin-block-end: 0.75em;
+    margin-inline-start: 1.75em;
+}
+
+.userstuff ol li ol li {
+    list-style-type: lower-alpha;
+}
+
+.userstuff ol li ol li ol li {
+    list-style-type: lower-roman;
+}
+
+.userstuff h1 {
+    text-align: center;
+}
+
+.userstuff h2 {
+    color: #333;
+    margin: 1.5em 0;
+    display: block;
+}
+
+.userstuff h3 {
+    font-weight: 500;
+    padding: 0.125em;
+    border-bottom: 0.25em double #333;
+}
+
+.userstuff h4 {
+    font-weight: 700;
+}
+
+.userstuff h5 {
+    font-weight: 600;
+    font-size: 1em;
+}
+
+.userstuff h6 {
+    font-size: 0.975em;
+    border-bottom: 1px solid;
+}
+
+.userstuff h3 a, .userstuff h3 a:link, .userstuff h3 a:visited {
+    font-weight: 500;
+    border-bottom: 0;
+    text-decoration: none;
+}
+
+.userstuff caption {
+    font-size: 1em;
+    height: auto;
+    width: auto;
+    opacity: 1;
+}
+
+.userstuff table, .userstuff td, .userstuff col, .userstuff tr,
+.userstuff thead, .userstuff tfoot, .userstuff tbody,
+.userstuff th, .userstuff thead td,
+.userstuff th a, .userstuff th a:link {
+    background: transparent;
+    border: none;
+}
+
+.userstuff blockquote, .userstuff address {
+    line-height: 1.5;
+    margin-inline-start: 1.5em;
+    padding: 0.75em;
+    border-inline-start: 2px solid #999;
+}
+
+.userstuff blockquote blockquote {
+    padding: 0.25em;
+    border: 0;
+}
+
+.userstuff hr {
+    width: 33%;
+    margin: 0.875em auto 1.2525em auto;
+    border: 1px solid;
+}
+
+.userstuff img {
+    max-width: 100%;
+    height: auto;
+}
+
+.userstuff video {
+    max-width: 100%;
+}

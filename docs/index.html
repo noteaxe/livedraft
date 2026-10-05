@@ -1,0 +1,147 @@
+﻿<html>
+<head>
+	<title>LiveDraft</title>
+	<link id="pageicon" rel="icon" type="image/x-icon" href="./images/lightlogo.ico" media="(prefers-color-scheme: light)">
+	<link id="pageicon" rel="icon" type="image/x-icon" href="./images/darklogo.ico" media="(prefers-color-scheme: dark)">
+	<meta charset="utf-8">
+	<link rel="stylesheet" href="style.css">
+	<script src="./UndoRedo.js"></script>
+	<script src="./highlight/highlight.js"></script>
+	<script src="main.js"></script>
+	<template id="richeditor">
+	<div class="elmContainer" contenteditable="true" onclick="clickBox(this, event)" ondblclick="doubleclickBox(this, event)"><p>rich text</p></div>
+</template>
+	<template id="richcontrolpanel">
+	<div id="editTools">
+		<div class="textoption">
+		<div style="display: grid; grid-template-columns: repeat(1, 1fr); grid-template-rows: repeat(2, 1fr); gap: 2px;">
+			<label style="font-size: small; margin: auto">Word Count</label>
+			<label id="wordcount" style="font-size: small" align="center">0</label>
+		</div>
+		<div style="display: grid; grid-template-columns: repeat(1, 1fr); grid-template-rows: repeat(2, 1fr); gap: 2px;">
+			<label style="font-size: small; margin: auto">HTML View</label>
+			<button class="richbutton" onclick="htmlView()" style="cursor:pointer">Edit</button>
+		</div>
+		<div style="display: grid; grid-template-columns: repeat(3, 1fr); grid-template-rows: repeat(2, 1fr); gap: 2px;">
+			<label style="grid-column: span 3 / span 3; font-size: small; margin: auto">Text Alignment</label>
+			<button class="richbutton" onclick="justifyleft()" style="grid-row-start: 2; text-wrap: nowrap; cursor:pointer; color: transparent; text-shadow: 0 0 0 #000000;">|🟰</button>
+			<button class="richbutton" onclick="justifycenter()" style="grid-row-start: 2; text-wrap: nowrap; cursor:pointer; color: transparent; text-shadow: 0 0 0 #000000;">🟰</button>
+			<button class="richbutton" onclick="justifyright()" style="grid-row-start: 2; text-wrap: nowrap; cursor:pointer; color: transparent; text-shadow: 0 0 0 #000000;">🟰|</button>
+		</div>
+		<div style="display: grid; grid-template-columns: repeat(4, 1fr); grid-template-rows: repeat(2, 1fr); gap: 2px;">
+			<label style="grid-column: span 4 / span 4; font-size: small; margin: auto;">Element Edit Tools</label>
+			<button class="richbutton" onclick="cutElm()" style="grid-row-start: 2; cursor:pointer">✂️</button>
+			<button class="richbutton" onclick="copyElm()" style="grid-row-start: 2; cursor:pointer">📑</button>
+			<button class="richbutton" onclick="delHighlighted()" style="grid-row-start: 2; cursor:pointer">❌</button>
+			<button class="richbutton" onclick="splitElm()" style="grid-row-start: 2; cursor:pointer">🪚</button>
+		</div>
+		<div style="display: grid; grid-template-columns: repeat(1, 1fr); grid-template-rows: repeat(2, 1fr); gap: 2px;">
+			<label style="grid-column: span 2 / span 2; font-size: small; margin: auto;">History</label>
+			<button class="richbutton" id="undo" onclick="undoFunc()" style="grid-row-start: 2; cursor:pointer">↩</button>
+			<button class="richbutton" id="redo" onclick="redoFunc()" style="grid-row-start: 2; cursor:pointer">↪</button>
+		</div>
+		<div style="display: grid; grid-template-columns: repeat(1, 1fr); grid-template-rows: repeat(2, 1fr); gap: 2px;">
+			<label style="grid-column: span 2 / span 2; font-size: small; margin: auto;">Move</label>
+			<button class="editorbuttons" onclick="moveUp()" style="grid-row-start: 2; cursor:pointer">⬆</button>
+			<button class="editorbuttons" onclick="moveDown()" style="grid-row-start: 2; cursor:pointer">⬇</button>
+		</div>
+		<div style="display: grid; grid-template-columns: repeat(1, 1fr); grid-template-rows: repeat(2, 1fr); gap: 2px;">
+			<label style="grid-column: span 2 / span 2; font-size: small; margin: auto;">Lists</label>
+			<button class="editorbuttons" onclick="insertUnList()" style="grid-row-start: 2; cursor:pointer"><span style="writing-mode: vertical-rl; width: 1em;"><span>•</span><span>•</span><span>•</span></span></button>
+			<button class="editorbuttons" onclick="insertOrdList()" style="grid-row-start: 2; cursor:pointer; width: 2em;"><span style="writing-mode: vertical-rl; text-orientation: upright; font-size: 0.5em; text-align: center; width: 1em;"><span>1</span><span>2</span><span>3</span></span></button>
+		</div>
+		</div>
+	</div>
+	</template>
+	<template id="htmlpoptemplate">
+		<div id="htmlPopUp">
+			<button onclick="closeHTMLview()">Submit</button>
+			<div style="height: 20em; width: 100%; position: relative">
+				<div class="htmlviewcont">
+					<textarea id="popupContent" oninput="updateHTMLview(this.value);" sync_scroll(this); onscroll="sync_scroll(this);"></textarea>
+				</div>
+				<div class="htmlviewcont">
+					<pre id="highlighting" aria-hidden="true">
+						<code class="language-xml" id="highlighting-content"></code>
+					</pre>
+				</div>
+			</div>
+		</div>
+	</template>
+	<template id="fileinfotemplate">
+			<div class="fileNameContainer">
+				<div class="webFileName"></div>
+				<div>
+					<button onclick="copyCSS(this)">📋 CSS</button>
+					<button onclick="loadWebFile(this)">load</button>
+					<button onclick="deleteWebFile(this)">X</button>
+				</div>
+			</div>
+	</template>
+<head>
+<body style="height:90vh">
+<div id="filespopup" class="isclosed">
+	<button onclick="closefilewindow()" style="position: absolute;">X</button>
+	<div id="filewindow">
+		<div id="filewindowchild">
+			<div id="fileheader">
+				<span style="margin: auto 0; color:light-dark(black,black); width:60%; display: flex">📁 <div id="filesearchcontainer"><input type="text" id="fileSearch" onkeyup="filterFiles()" placeholder="Search for files.."></div></span>
+				<span><button onclick="restoreDeleted()">Recover Works</button></span>
+			</div>
+		</div>
+		<div id="filelist"></div>
+	</div>
+</div>
+<div id="saveSuggestPopUp"><p onclick="closesavepopup()">This site is in beta, consider downloading a backup of your work</p>
+	<div style="align-self: center;"><span><button onclick="stopinterval()"> 🆇 don't show this again</button></span></div>
+</div>
+<div id="mainheader">
+	<label class="switch">
+  		<input id="styleToggle" type="checkbox" onclick="toggleStyle()">
+  		<span class="slider round"></span>
+	</label>
+	<label class="switchLabel">Dark Mode</label>
+	<p>Live Draft <sup style="font-size: 0.5em"><i>Beta</i></sup></p>
+	<span id="helptooltip"></span>
+	<a href="https://github.com/noteaxe/livedraft" id="githubicon" target="_blank" onmouseover="showtooltip(true)" onmouseout="showtooltip(false)"><span>⁉️</span></a>
+</div>
+<div id="maincontainer">
+	<div id="scalable">
+	<div id="editor">
+	<details style="margin: 0 0.5em" onclick="clickDetails(this)">
+	<summary style="white-space: nowrap;">HTML Editor</summary>
+	<div style="display: flex">
+		<button class="editorbuttons" onclick="newDocument()"><span>NEW DOC</span></button>
+		<button class="editorbuttons" onclick="viewFiles()"><span>SAVED WORKS</span></button>
+	</div>
+		<button class="editorbuttons" onclick="updateCSS()"><span>UPDATE CSS</span></button>
+		<textarea id="cssCode" class="code"></textarea>
+		<button class="editorbuttons" onclick="addCodeBlock()"><span>ADD HTML BLOCK</span></button>
+		<textarea id="htmlCode" class="code"></textarea>
+		<div>
+		</div>
+		<button class="editorbuttons" onclick="addRichText()"><span>ADD RICH TEXT BLOCK</span></button>
+		<button class="editorbuttons" onclick="deleteNode()"><span>DELETE OUTLINED BLOCK</span></button>
+		
+		<div id="exportWIP">
+		<textarea id="filenameWIP" placeholder="File name..."></textarea>
+		<button class="editorbuttons" onclick="webSave()"><span>SAVE WIP</span></button>
+		<button class="editorbuttons" onclick="saveIframe()"><span>DOWNLOAD WIP</span></button>
+		</div>
+		<form method="post" id="fileform" enctype="multipart/form-data">
+  			<input name="file" type="file" id="file-input" style="width: 100%;" onchange="handleFileSelect()">
+		</form>
+		<div>
+		<button class="editorbuttons" onclick="saveHTML()"><span>EXPORT FOR AO3</span></button>
+		<textarea class="code" style="height: 5em !important" id="outputAo3"></textarea>
+		</div>
+	</details>
+	</div>
+	</div>
+	<div id="preview">
+	</div>
+		
+	</div>
+</div>
+</body>
+</html>
