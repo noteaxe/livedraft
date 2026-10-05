@@ -2,7 +2,7 @@
 
 __An Ao3 HTML editor designed to make it easy to build, preview and edit fics using *any* custom workskin.__
 
-## Main Features
+## Main Features 
 
 + __Preview and edit Ao3 fics styled using *any* custom css worksin.__
 + __Easily integrate styled HTML elements with normal text.__
