@@ -28,12 +28,13 @@
 			<button class="richbutton" onclick="justifycenter()" style="grid-row-start: 2; text-wrap: nowrap; cursor:pointer; color: transparent; text-shadow: 0 0 0 #000000;">🟰</button>
 			<button class="richbutton" onclick="justifyright()" style="grid-row-start: 2; text-wrap: nowrap; cursor:pointer; color: transparent; text-shadow: 0 0 0 #000000;">🟰|</button>
 		</div>
-		<div style="display: grid; grid-template-columns: repeat(4, 1fr); grid-template-rows: repeat(2, 1fr); gap: 2px;">
-			<label style="grid-column: span 4 / span 4; font-size: small; margin: auto;">Element Edit Tools</label>
+		<div style="display: grid; grid-template-columns: repeat(5, 1fr); grid-template-rows: repeat(2, 1fr); gap: 2px;">
+			<label style="grid-column: span 5 / span 5; font-size: small; margin: auto;">Tools</label>
 			<button class="richbutton" onclick="cutElm()" style="grid-row-start: 2; cursor:pointer">✂️</button>
 			<button class="richbutton" onclick="copyElm()" style="grid-row-start: 2; cursor:pointer">📑</button>
 			<button class="richbutton" onclick="delHighlighted()" style="grid-row-start: 2; cursor:pointer">❌</button>
 			<button class="richbutton" onclick="splitElm()" style="grid-row-start: 2; cursor:pointer">🪚</button>
+			<button class="richbutton" onclick="cleanClassNames()" style="grid-row-start: 2; cursor:pointer">🧽</button>
 		</div>
 		<div style="display: grid; grid-template-columns: repeat(1, 1fr); grid-template-rows: repeat(2, 1fr); gap: 2px;">
 			<label style="grid-column: span 2 / span 2; font-size: small; margin: auto;">History</label>
@@ -56,7 +57,7 @@
 	<template id="htmlpoptemplate">
 		<div id="htmlPopUp">
 			<button onclick="closeHTMLview()">Submit</button>
-			<div style="height: 20em; width: 100%; position: relative">
+			<div style="height: 20em; width: 100%; position: relative; background: white;">
 				<div class="htmlviewcont">
 					<textarea id="popupContent" oninput="updateHTMLview(this.value);" sync_scroll(this); onscroll="sync_scroll(this);"></textarea>
 				</div>
@@ -65,6 +66,39 @@
 						<code class="language-xml" id="highlighting-content"></code>
 					</pre>
 				</div>
+			</div>
+		</div>
+	</template>
+	<template id="cleantagpopuptemplate">
+		<div id="cleantags">
+			<div style="height: 20em; width: 99%; position: relative; background: white; margin: 10px auto;">
+				<div style="display: flex; width: 100%;">
+					<textarea placeholder="HTML string to be removed e.g &lt;p&gt;&lt;/p&gt;"></textarea>
+					<button onclick="addTagInput(this)">➕</button>
+					<button onclick="remTagInput(this)">➖</button>
+				</div>
+				<label class="container">Condense Span tags
+					<input id="condensespans" type="checkbox">
+					<span class="checkmark"></span>
+				</label>
+			</div>
+			<div id="tagselectors">
+				<label class="container">All
+					<input name="all" type="checkbox">
+					<span class="checkmark"></span>
+				</label>
+				<label class="container">Block
+					<input name="block" type="checkbox">
+					<span class="checkmark"></span>
+				</label>
+				<label class="container">Selected
+					<input name="selected" type="checkbox">
+					<span class="checkmark"></span>
+				</label>
+			</div>
+			<div class="popupbuttons" style="display: flex; ">
+				<button name="close" style="width: fit-content;" onclick="cleantag(this)">❌</button>
+				<button name="submit" style="width: fit-content;" onclick="cleantag(this)">✅</button>
 			</div>
 		</div>
 	</template>

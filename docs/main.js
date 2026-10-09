@@ -23,6 +23,7 @@ document.addEventListener('DOMContentLoaded', (event) => {
 window.onload = function(){
 	richController = document.getElementById("richcontrolpanel")
 	htmlPopUpTemp = document.getElementById("htmlpoptemplate")
+	cleanTagsTemp = document.getElementById("cleantagpopuptemplate")
 	preview = document.getElementById("preview")
 	createHTMLframe()
 	
@@ -181,7 +182,12 @@ const callback = (mutationList, observer) => {
 	localStorage.setItem("openText", myHistory.current());
 	localStorage.setItem("openCSS", htmlDoc.getElementById("userstyle").innerHTML)
 	calcWordCount(userstuff, htmlDoc.getElementById("wordcount"))
+
 };
+
+function detailListener(e){
+	console.log(e.target)
+}
 
 const observer = new MutationObserver(callback);
 
@@ -268,6 +274,7 @@ function formatForAo3(html){
 	for (span of spanelements){
 		const newp = document.createElement("p")
 		let newHTML = span.outerHTML
+		console.log(span.parentNode)
 
 		if (span.previousElementSibling == null){
 			let siblings = []
@@ -279,11 +286,13 @@ function formatForAo3(html){
 			for (let s of siblings){
 				newHTML = newHTML + s.outerHTML
 			}
-		} else {
-			//
 		}
-		newp.innerHTML = newHTML
-		span.replaceWith(newp)
+
+		if (span.parentNode.tagName != 'P'){
+			newp.innerHTML = newHTML
+			span.replaceWith(newp)	
+		}
+
 	}
 
 	let imgElements = container.querySelectorAll("img")
@@ -356,7 +365,6 @@ function createHTMLframe(){
 		let iframeHead = iframeDoc.getElementsByTagName("head")[0]
 		
 		let script = iframeDoc.createElement("script")
-		let purify = iframeDoc.createElement("script")
 		let rs = iframeDoc.createElement("script")
 		let highlighter = iframeDoc.createElement("script")
 		let loadHighlighter = iframeDoc.createElement("script")
@@ -384,6 +392,7 @@ function createHTMLframe(){
 		
 		let controltemplate = richController.content.cloneNode(true).firstElementChild;
 		let htmltemp = htmlPopUpTemp.content.cloneNode(true).firstElementChild;
+		let cleantagstemp = cleanTagsTemp.content.cloneNode(true).firstElementChild;
 		
 		let workskin = iframeDoc.createElement("div")
 		workskin.id = "workskin"
@@ -396,6 +405,7 @@ function createHTMLframe(){
 		
 		
 		workskin.appendChild(userstuff)
+		container.appendChild(cleantagstemp)
 		container.appendChild(controltemplate)
 		container.appendChild(htmltemp)
 		container.append(workskin)
@@ -424,8 +434,37 @@ function createHTMLframe(){
 			userstyle.innerHTML = localStorage.getItem("openCSS")
 			cssCode.value = localStorage.getItem("openCSS")
 		};
+
+		//Event Listeners
+
+		userstuff.addEventListener("click", checkForClick)
+		const cleanCheckBoxes = iframeDoc.getElementById("tagselectors").querySelectorAll("input")
+		for (box of cleanCheckBoxes){
+			box.addEventListener("mousedown", checkSelection)
+		}
 	}
 	
+}
+
+function checkForClick(e){
+	let t = e.target.tagName
+	let details = null
+	if (t == "SUMMARY" || t == "DETAILS"){
+		e.stopPropagation();
+		if (t == "SUMMARY"){
+			details = e.target.parentNode
+		} else {
+			details = e.target
+		}
+		let newdetail = document.createElement('details')
+		let attrs = details.attributes
+		for (const a of attrs){
+			newdetail.setAttribute(a.name, a.value)
+		}
+		newdetail.open = true
+		newdetail.innerHTML = details.innerHTML
+		details.replaceWith(newdetail)
+	}
 }
 
 function addListener(){
@@ -748,6 +787,126 @@ function splitElm(){
 	}
 }
 
+function cleanClassNames(button){
+	let validClasses = ['elmContainer']
+	let n = button.name
+
+	//GET VALID USER CLASS NAMES
+	for (let entry of document.getElementById('userstyle').innerHTML.split('}')){
+		let classname = entry.split('{')[0].replace('#workskin', '').trim().replace('.', '').trim()
+		validClasses.push(classname)
+	}
+
+	let checkAgainst = []
+	if (n == "all"){
+		checkAgainst = document.getElementsByClassName('userstuff')[0].querySelectorAll('*')
+	} 
+
+	if (n == "selected"){
+		let get = getHighlightedElm()
+		checkAgainst = Array.from(get.querySelectorAll("*"))
+		checkAgainst.push(get)
+	}
+
+	if (n == "block"){
+		let get = getHighlightedElm().parentNode
+		checkAgainst = Array.from(get.querySelectorAll("*"))
+		checkAgainst.push(get)
+	}
+
+	for (let elm of checkAgainst){
+		console.log(elm)
+		let classnames = elm.className.split(' ')
+		for (c of classnames){
+			if (c.length != 0 && !validClasses.includes(c)){
+				elm.classList.remove(c)
+				if (elm.className.length == 0){
+					elm.removeAttribute('class')
+				}
+			}
+		}
+	}
+
+}
+
+function cleantag(button){
+	let popup = document.getElementById("cleantags")
+	const n = button.name
+	if (n == "show"){
+		popup.style.display = "flex";
+	}
+
+	if (n == "close"){
+		popup.removeAttribute("style")
+	}
+
+	if (n == "submit"){
+		const checked = document.getElementById("tagselectors").querySelector(":checked")
+		const tags = popup.querySelectorAll("textarea")
+		const condense = document.getElementById("condensespans")
+		let values = []
+		for (let t of tags){
+			values.push(t.value)
+		}
+		let scope = []
+		if (checked != null){
+			if (checked.name == "all"){
+				scope = document.getElementsByClassName('userstuff')[0].querySelectorAll('*')
+				console.log(scope)
+			}
+
+			if (checked.name == "block"){
+				let get = getHighlightedElm().parentNode
+				scope = Array.from(get.querySelectorAll("*"))
+				scope.push(get)
+			}
+
+			if (checked.name == "selected"){
+				let get = getHighlightedElm()
+				scope = Array.from(get.querySelectorAll("*"))
+				scope.push(get)
+			}
+			
+			for (let s of scope){
+				if (values.includes(s.outerHTML.replace('\n', ' '))){
+					console.log(s)
+					s.remove()
+				}
+				if (condense){
+					if (s.tagName == "SPAN" && s.parentNode.innerHTML.replace(s.outerHTML, '').length != 0 && s.attributes.length == 0){
+						let newHTML = s.parentNode.innerHTML.replace('<span>', '').replace('</span>', '')
+						s.parentNode.innerHTML = newHTML
+					}
+				}
+			}
+		}
+		popup.removeAttribute("style")
+	}
+}
+
+function addTagInput(button){
+	const textArea = document.createElement("textarea")
+	button.parentNode.insertBefore(textArea, button)
+}
+
+function remTagInput(button){
+	const nodes = Array.from(button.parentNode.querySelectorAll("textarea"))
+	if (nodes.length > 1){
+		const last = nodes[nodes.length -1]
+		last.remove()
+	}
+}
+
+function checkSelection(e){
+	const boxes = e.target.parentNode.parentNode.querySelectorAll("input")
+	if (!e.target.checked){
+		for (let b of boxes){
+			b.checked = false
+		}
+	}
+}
+
+
 function insertUnList(){
 	document.execCommand('insertUnorderedList')
 }
@@ -985,6 +1144,10 @@ function escapeHtml(html) {
     .replace(/'/g, "&#039;");
 }
 
+
+function extratoolsmenu(){
+
+}
 
 
 function closeHTMLview(){

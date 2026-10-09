@@ -93,7 +93,7 @@ So I am *not* a tech person. This grew out of a few smaller projects over the co
 
 ---
 
-### Element Edit Tools
+### Tools
 
 >[!NOTE]
 > For normal copy/paste use ctrl/cmd + c/v.
@@ -103,6 +103,7 @@ So I am *not* a tech person. This grew out of a few smaller projects over the co
 + __<ins>📑</ins>__ → Copy current selection to clipboard.
 + __<ins>❌</ins>__ → Delete current selection.
 + __<ins>🪚</ins>__ → Split current selection into it's own block.
++ __<ins>🧽</ins>__ → Remove any class names not included in your workskin.
 
 ## General HTML and CSS Resources
 [HTML and CSS Essentials](http://w3schools.com/htmlcss/htmlcss_essentials.asp)
