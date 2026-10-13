@@ -205,6 +205,7 @@ function keydown(evt){
 		evt.preventDefault()
 	  	undoFunc()
 	}
+
 	
 	if (evt.key == 'Backspace'){
 		sessionStorage.setItem("backspace", "down")
@@ -218,6 +219,10 @@ function keydown(evt){
 function keyup(evt){
 	sessionStorage.removeItem("backspace")
 	sessionStorage.removeItem("enter")
+	
+	if (evt.key.toLowerCase() == 'v' && (evt.ctrlKey || evt.metaKey)){
+		cleanFormatting(document.getElementsByClassName('userstuff')[0])
+	}
 }
 
 function undoFunc(){
