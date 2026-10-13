@@ -179,6 +179,13 @@ const callback = (mutationList, observer) => {
 				htmlDoc.execCommand('delete')
 		} 
 	}}
+
+	if (sessionStorage.getItem("paste") == 'down'){
+		//let html = myHistory.current()
+		//let frag = document.createRange().createContextualFragment(html)
+		//console.log(frag)
+	}
+
 	localStorage.setItem("openText", myHistory.current());
 	localStorage.setItem("openCSS", htmlDoc.getElementById("userstyle").innerHTML)
 	calcWordCount(userstuff, htmlDoc.getElementById("wordcount"))
@@ -186,7 +193,7 @@ const callback = (mutationList, observer) => {
 };
 
 function detailListener(e){
-	console.log(e.target)
+	//console.log(e.target)
 }
 
 const observer = new MutationObserver(callback);
@@ -214,15 +221,12 @@ function keydown(evt){
 	if (evt.key == 'Enter'){
 		sessionStorage.setItem("enter", "down")
 	}
+
 }
 
 function keyup(evt){
 	sessionStorage.removeItem("backspace")
 	sessionStorage.removeItem("enter")
-	
-	if (evt.key.toLowerCase() == 'v' && (evt.ctrlKey || evt.metaKey)){
-		cleanFormatting(document.getElementsByClassName('userstuff')[0])
-	}
 }
 
 function undoFunc(){
@@ -279,7 +283,7 @@ function formatForAo3(html){
 	for (span of spanelements){
 		const newp = document.createElement("p")
 		let newHTML = span.outerHTML
-		console.log(span.parentNode)
+		//console.log(span.parentNode)
 
 		if (span.previousElementSibling == null){
 			let siblings = []
@@ -820,7 +824,6 @@ function cleanClassNames(button){
 	}
 
 	for (let elm of checkAgainst){
-		console.log(elm)
 		let classnames = elm.className.split(' ')
 		for (c of classnames){
 			if (c.length != 0 && !validClasses.includes(c)){
@@ -857,7 +860,6 @@ function cleantag(button){
 		if (checked != null){
 			if (checked.name == "all"){
 				scope = document.getElementsByClassName('userstuff')[0].querySelectorAll('*')
-				console.log(scope)
 			}
 
 			if (checked.name == "block"){
@@ -874,7 +876,6 @@ function cleantag(button){
 			
 			for (let s of scope){
 				if (values.includes(s.outerHTML.replace('\n', ' '))){
-					console.log(s)
 					s.remove()
 				}
 				if (condense){
