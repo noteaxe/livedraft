@@ -140,6 +140,7 @@ const callback = (mutationList, observer) => {
 		   target = mutation.target
 	}
 	if (types.includes("attributes")){
+		console.log(mutation)
 		sibling = target.previousSibling
 		cleanFormatting(userstuff)
 		observer.disconnect();
@@ -283,8 +284,6 @@ function formatForAo3(html){
 	for (span of spanelements){
 		const newp = document.createElement("p")
 		let newHTML = span.outerHTML
-		//console.log(span.parentNode)
-
 		if (span.previousElementSibling == null){
 			let siblings = []
 
@@ -297,7 +296,7 @@ function formatForAo3(html){
 			}
 		}
 
-		if (span.parentNode.tagName != 'P'){
+		if (span.parentNode.tagName != 'P' || span.parentNode.tagName != 'SPAN' ){
 			newp.innerHTML = newHTML
 			span.replaceWith(newp)	
 		}
@@ -306,7 +305,7 @@ function formatForAo3(html){
 
 	let imgElements = container.querySelectorAll("img")
 	for (img of imgElements){
-		if (img.parentNode.tagName != 'P'){
+		if (img.parentNode.tagName != 'P' && img.parentNode.tagName != 'SPAN'){
 			const newimg = document.createElement("p")
 			newimg.innerHTML = img.outerHTML
 
@@ -332,6 +331,7 @@ function toggleStyle(){
 	if (toggled == true){
 		mainbody.classList.add("darkModeBody")
 		htmlDoc.body.style = "background: #141415 !important; color: white"
+		userstuff.style = "background: #141415 !important; color: white"
 		htmlDoc.getElementById("editTools").classList.add("darkModeEditTools")
 		for (let elm of textBoxes){
 			elm.classList.add("darkModeBody")
@@ -345,6 +345,7 @@ function toggleStyle(){
 	if (toggled == false){
 		mainbody.classList.remove("darkModeBody")
 		htmlDoc.body.removeAttribute("style")
+		userstuff.removeAttribute("style")
 		htmlDoc.getElementById("editTools").classList.remove("darkModeEditTools")
 		for (let elm of textBoxes){
 			elm.classList.remove("darkModeBody")
@@ -456,24 +457,7 @@ function createHTMLframe(){
 }
 
 function checkForClick(e){
-	let t = e.target.tagName
-	let details = null
-	if (t == "SUMMARY" || t == "DETAILS"){
-		e.stopPropagation();
-		if (t == "SUMMARY"){
-			details = e.target.parentNode
-		} else {
-			details = e.target
-		}
-		let newdetail = document.createElement('details')
-		let attrs = details.attributes
-		for (const a of attrs){
-			newdetail.setAttribute(a.name, a.value)
-		}
-		newdetail.open = true
-		newdetail.innerHTML = details.innerHTML
-		details.replaceWith(newdetail)
-	}
+	
 }
 
 function addListener(){
