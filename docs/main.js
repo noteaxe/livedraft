@@ -128,6 +128,7 @@ const config = {attributes: true, childList: true, subtree: true, characterData:
 // Callback function to execute when mutations are observed
 const callback = (mutationList, observer) => {
 	let types = []
+	let atNames = []
 	var target = null
 	var sibling = null
 	for (const mutation of mutationList) {
@@ -138,10 +139,10 @@ const callback = (mutationList, observer) => {
 		  }
 		   types.push(mutation.type)
 		   target = mutation.target
+		   atNames.push(mutation.attributeName)
 	}
 	if (types.includes("attributes")){
 		sibling = target.previousSibling
-		cleanFormatting(userstuff)
 		observer.disconnect();
 
 		let temp = document.createElement('div')
@@ -190,14 +191,29 @@ const callback = (mutationList, observer) => {
 		//console.log(frag)
 	}
 
+	addListeners()
+
 	localStorage.setItem("openText", myHistory.current());
 	localStorage.setItem("openCSS", htmlDoc.getElementById("userstyle").innerHTML)
 	calcWordCount(userstuff, htmlDoc.getElementById("wordcount"))
 
 };
 
-function detailListener(e){
-	//console.log(e.target)
+let details = []
+
+function addListeners(){
+	for (let detail of userstuff.querySelectorAll('details')){
+		if (!details.includes(detail)){
+			details.push(detail)
+		}
+	}
+	for (let d of details){
+		d.addEventListener('toggle', this.detailtoggle)
+	}
+}
+
+function detailtoggle(e){
+	console.log(e)
 }
 
 const observer = new MutationObserver(callback);
@@ -210,9 +226,11 @@ function keydown(evt){
 	evt.stopImmediatePropagation();
 
 	if (evt.key.toLowerCase() == 'z' && (evt.ctrlKey || evt.metaKey) && evt.shiftKey) {
+		console.log('redo')
 		evt.preventDefault()
 	  	redoFunc()
 	} else if (evt.key.toLowerCase() == 'z' && (evt.ctrlKey || evt.metaKey)) {
+		console.log('undo')
 		evt.preventDefault()
 	  	undoFunc()
 	}
@@ -235,6 +253,7 @@ function keyup(evt){
 
 function undoFunc(){
 	let history = document.myHistory
+	console.log(history)
 	if (history.undo(true) !== undefined) {
         document.body.getElementsByClassName('userstuff')[0].innerHTML = history.undo()
     }
