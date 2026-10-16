@@ -140,7 +140,6 @@ const callback = (mutationList, observer) => {
 		   target = mutation.target
 	}
 	if (types.includes("attributes")){
-		console.log(mutation)
 		sibling = target.previousSibling
 		cleanFormatting(userstuff)
 		observer.disconnect();
@@ -158,8 +157,12 @@ const callback = (mutationList, observer) => {
 		let parent = target.parentNode;
 		parent.innerHTML = parent.textContent;
 		let selection = htmlDoc.getSelection();
-		selection.extend(selection.anchorNode, sibling.textContent.length)
-		htmlDoc.getSelection().collapseToEnd()
+		try {
+			selection.extend(selection.anchorNode, sibling.textContent.length)
+			htmlDoc.getSelection().collapseToEnd()
+		} catch(error) {
+			
+		}	
 	}
 
 	if (sessionStorage.getItem("enter") == 'down'){
@@ -215,7 +218,7 @@ function keydown(evt){
 	}
 
 	
-	if (evt.key == 'Backspace'){
+	if (evt.key == 'Backspace' && !evt.shiftKey){
 		sessionStorage.setItem("backspace", "down")
 	}
 
